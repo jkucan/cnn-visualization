@@ -39,3 +39,7 @@ backend/app/   main.py (API + WebSocket), trainer.py (background training), mode
 backend/tests/ pytest
 frontend/src/  main.ts (controls), draw.ts (canvas), viz/network.ts, viz/charts.ts, viz/colors.ts
 ```
+
+## License
+
+MIT. See [LICENSE](LICENSE).

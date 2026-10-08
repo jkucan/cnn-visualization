@@ -1,0 +1,6 @@
+# torch / torchvision are installed from the CPU wheel index in the Dockerfile.
+fastapi>=0.115
+uvicorn[standard]>=0.30
+numpy>=1.26
+pillow>=10.0
+pydantic>=2.7

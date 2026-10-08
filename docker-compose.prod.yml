@@ -1,0 +1,14 @@
+# Production: the single self-contained image.  Open http://localhost:8000
+services:
+  app:
+    build:
+      context: .
+      target: runtime
+    image: cnn-digits-demo
+    ports:
+      - "8000:8000"
+    volumes:
+      - checkpoints:/checkpoints
+
+volumes:
+  checkpoints:

@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+
+# Data, checkpoints and build output (generated at build/run time)
+backend/data/
+backend/checkpoints/
+backend/static/
+*.pt
+
+# Frontend
+node_modules/
+frontend/dist/
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/

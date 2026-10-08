@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CNN digit recognizer — live training demo</title>
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Handwritten digit CNN</h1>
+      <span id="status" class="pill">connecting…</span>
+      <span id="test-acc" class="muted"></span>
+      <span id="message" class="message" hidden></span>
+      <button id="open-settings" class="settings-btn" aria-controls="settings" aria-expanded="false">⚙ Settings</button>
+    </header>
+
+    <main>
+      <aside>
+        <section>
+          <h2>Draw a digit</h2>
+          <canvas id="pad" width="280" height="280" aria-label="Drawing canvas"></canvas>
+          <div class="row">
+            <button id="clear">Clear</button>
+            <span id="sample-label" class="muted"></span>
+          </div>
+        </section>
+
+        <section>
+          <div class="row actions">
+            <button id="randomize">Reset weights</button>
+            <button id="start" class="primary">Train</button>
+          </div>
+          <div class="progress"><div id="progress-bar"></div></div>
+          <div id="progress-text" class="muted">idle</div>
+        </section>
+
+        <section>
+          <h2>Loss <span class="muted">(recent training batches)</span></h2>
+          <div id="loss-chart" class="chart"></div>
+          <h2>Accuracy</h2>
+          <div id="acc-chart" class="chart"></div>
+        </section>
+      </aside>
+
+      <section class="network">
+        <div class="toolbar">
+          <div class="legends">
+            <div class="legend-item"><span>weight</span><span class="muted">−</span><i id="lg-weight"></i><span class="muted">+</span></div>
+            <div class="legend-item"><span>activation</span><span class="muted">0</span><i id="lg-act"></i><span class="muted">max</span></div>
+          </div>
+        </div>
+        <div class="canvas-wrap"><canvas id="net"></canvas></div>
+        <p class="hint muted">Hover any pixel, kernel weight or node for details. Hovering a hidden unit shows its input weights on the pooled feature maps.</p>
+      </section>
+    </main>
+
+    <div id="backdrop" class="backdrop" hidden></div>
+    <div id="settings" class="drawer" role="dialog" aria-modal="true" aria-labelledby="settings-title" aria-hidden="true" inert>
+      <div class="drawer-head">
+        <h2 id="settings-title">Settings</h2>
+        <button id="close-settings" aria-label="Close settings">✕</button>
+      </div>
+
+      <section>
+        <h2>Network display</h2>
+        <label>Connection lines show
+          <select id="edge-mode">
+            <option value="contribution">contribution (weight × activation)</option>
+            <option value="weight">weight only</option>
+          </select>
+        </label>
+        <label class="row">Hidden-layer lines <input id="topk" type="range" min="0" /></label>
+        <div id="topk-val" class="muted small"></div>
+      </section>
+
+      <section>
+        <h2>Drawing</h2>
+        <label class="row">Brush <input id="brush" type="range" min="8" max="36" value="20" /></label>
+        <div class="row"><button id="sample">Load a random test digit</button></div>
+      </section>
+
+      <section>
+        <h2>Weights</h2>
+        <div class="grid2">
+          <label>Reset uses
+            <select id="init">
+              <option value="kaiming">Kaiming (default)</option>
+              <option value="xavier">Xavier</option>
+              <option value="normal">Normal(0, scale)</option>
+              <option value="uniform">Uniform(±scale)</option>
+            </select>
+          </label>
+          <label>Seed <input id="seed" type="number" placeholder="random" /></label>
+          <label id="scale-wrap" hidden>Scale <input id="scale" type="number" step="0.01" value="0.1" /></label>
+        </div>
+        <div class="row">
+          <button id="load-pretrained">Load pretrained</button>
+          <button id="save">Save checkpoint</button>
+          <button id="load-user">Load saved</button>
+        </div>
+      </section>
+
+      <section>
+        <h2>Training</h2>
+        <div class="grid2">
+          <label>Epochs <input id="epochs" type="number" min="1" max="50" value="1" /></label>
+          <label>Learning rate <input id="lr" type="number" step="0.001" min="0.0001" value="0.005" /></label>
+          <label>Batch size <input id="batch" type="number" min="1" value="64" /></label>
+          <label>Optimizer
+            <select id="optimizer"><option value="adam">Adam</option><option value="sgd">SGD + momentum</option></select>
+          </label>
+          <label>Training images
+            <select id="subset">
+              <option value="0">all 60,000</option>
+              <option value="10000">10,000</option>
+              <option value="2000">2,000</option>
+              <option value="500">500</option>
+            </select>
+          </label>
+          <label class="check"><input id="augment" type="checkbox" checked /> Augment (shift / rotate)</label>
+        </div>
+        <label class="row">Slow down <input id="delay" type="range" min="0" max="500" step="10" value="0" /> <span id="delay-val" class="muted">0 ms / batch</span></label>
+        <div class="row">
+          <button id="step">Step 1 batch</button>
+          <button id="stop">Stop training</button>
+        </div>
+        <p class="muted small">Epoch, learning rate and other training settings apply the next time you start training.</p>
+      </section>
+    </div>
+
+    <div id="tooltip" class="tooltip" hidden></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
